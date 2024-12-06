@@ -22,13 +22,24 @@ let coaches = {
     redAuerbach: { cost: 2500, pointsPerSec: 20, purchased: false },
     greggPopovich: { cost: 10000, pointsPerSec: 50, purchased: false },
     docRivers: { cost: 25000, pointsPerSec: 100, purchased: false },
+    steveKerr: { cost: 100000, pointsPerSec: 200, purchased: false } // New Coach
 };
+
+// Players (with Bill Russell added)
+let players = [
+    { name: 'Michael Jordan', cost: 10, pointsPerClick: 1 },
+    { name: 'Kobe Bryant', cost: 50, pointsPerClick: 5 },
+    { name: 'LeBron James', cost: 200, pointsPerClick: 10 },
+    { name: 'Bill Russell', cost: 1000, pointsPerClick: 25 } // Bill Russell added
+];
+
+// Player and Coach state tracking
+let currentPlayerIndex = 0;
+let currentCoachIndex = 0;
 
 // Point Bank variables
 let bankBalance = 0;
 let interestRate = 0.5;
-let bankInterestInterval;
-let bankInterestAmount = 0;
 
 // Function to generate points from coaches
 function generateAutoPoints() {
@@ -60,12 +71,12 @@ function withdrawPoints() {
 
 // Function to update the point bank and interest
 function updateBankDisplay() {
-    document.getElementById('bank-amount').innerText = bankBalance;
+    document.getElementById('bank-amount').innerText = Math.round(bankBalance); // Round up
     document.getElementById('interest-rate').innerText = `${interestRate.toFixed(2)}%`;
 
     // Increase interest rate based on the amount in the bank
     interestRate = 0.5 + (bankBalance / 1000000); // Increase interest rate as bank balance grows
-    bankBalance += bankBalance * (interestRate / 100);
+    bankBalance += Math.round(bankBalance * (interestRate / 100)); // Round up the bank balance
 }
 
 // Function to handle the prestige system
@@ -85,12 +96,14 @@ function updateDisplay() {
     document.getElementById("points").innerText = `Points: ${points}`;
     document.getElementById("multipliers").innerText = `Multipliers: ${prestigeMultiplier}x`;
 
-    // Show or hide buttons based on purchases
-    if (upgrade1Purchased) document.getElementById("upgrade2").style.display = "block";
-    if (upgrade2Purchased) document.getElementById("upgrade3").style.display = "block";
-    if (upgrade3Purchased) document.getElementById("upgrade4").style.display = "block";
-    if (upgrade4Purchased) document.getElementById("upgrade5").style.display = "block";
-    if (upgrade5Purchased) document.getElementById("coach1").style.display = "block";
+    // Show the current player and coach
+    if (currentPlayerIndex < players.length) {
+        document.getElementById("player").innerText = `${players[currentPlayerIndex].name} (Cost: ${players[currentPlayerIndex].cost})`;
+    }
+
+    if (currentCoachIndex < Object.keys(coaches).length) {
+        document.getElementById("coach").innerText = `${Object.keys(coaches)[currentCoachIndex]} (Cost: ${coaches[Object.keys(coaches)[currentCoachIndex]].cost})`;
+    }
 
     // Update bank display
     updateBankDisplay();
@@ -108,11 +121,8 @@ function saveGameData() {
     localStorage.setItem("upgrade4Purchased", upgrade4Purchased);
     localStorage.setItem("upgrade5Purchased", upgrade5Purchased);
 
-    localStorage.setItem("coach1Purchased", coaches.philJackson.purchased);
-    localStorage.setItem("coach2Purchased", coaches.patRiley.purchased);
-    localStorage.setItem("coach3Purchased", coaches.redAuerbach.purchased);
-    localStorage.setItem("coach4Purchased", coaches.greggPopovich.purchased);
-    localStorage.setItem("coach5Purchased", coaches.docRivers.purchased);
+    localStorage.setItem("currentPlayerIndex", currentPlayerIndex);
+    localStorage.setItem("currentCoachIndex", currentCoachIndex);
 
     localStorage.setItem("bankBalance", bankBalance);
     localStorage.setItem("interestRate", interestRate);
@@ -125,21 +135,11 @@ window.onload = function() {
     if (localStorage.getItem("prestigeMultiplier")) prestigeMultiplier = parseFloat(localStorage.getItem("prestigeMultiplier"));
     if (localStorage.getItem("bankBalance")) bankBalance = parseFloat(localStorage.getItem("bankBalance"));
     if (localStorage.getItem("interestRate")) interestRate = parseFloat(localStorage.getItem("interestRate"));
+    
+    if (localStorage.getItem("currentPlayerIndex")) currentPlayerIndex = parseInt(localStorage.getItem("currentPlayerIndex"));
+    if (localStorage.getItem("currentCoachIndex")) currentCoachIndex = parseInt(localStorage.getItem("currentCoachIndex"));
 
-    // Load upgrades
-    if (localStorage.getItem("upgrade1Purchased") === "true") upgrade1Purchased = true;
-    if (localStorage.getItem("upgrade2Purchased") === "true") upgrade2Purchased = true;
-    if (localStorage.getItem("upgrade3Purchased") === "true") upgrade3Purchased = true;
-    if (localStorage.getItem("upgrade4Purchased") === "true") upgrade4Purchased = true;
-    if (localStorage.getItem("upgrade5Purchased") === "true") upgrade5Purchased = true;
-
-    // Load coaches
-    coaches.philJackson.purchased = localStorage.getItem("coach1Purchased") === "true";
-    coaches.patRiley.purchased = localStorage.getItem("coach2Purchased") === "true";
-    coaches.redAuerbach.purchased = localStorage.getItem("coach3Purchased") === "true";
-    coaches.greggPopovich.purchased = localStorage.getItem("coach4Purchased") === "true";
-    coaches.docRivers.purchased = localStorage.getItem("coach5Purchased") === "true";
-
+    // Load upgrades (none in this simplified version)
     updateDisplay();
 
     // Start generating points from coaches every second
@@ -154,6 +154,30 @@ function clickBasketball() {
 }
 
 // Buy player upgrades
+function buyPlayer() {
+    let player = players[currentPlayerIndex];
+    if (points >= player.cost) {
+        points -= player.cost;
+        pointsPerClick += player.pointsPerClick;
+        currentPlayerIndex++;
+        saveGameData();
+        updateDisplay();
+    }
+}
+
+// Buy coach upgrades
+function buyCoach() {
+    let coach = Object.keys(coaches)[currentCoachIndex];
+    if (points >= coaches[coach].cost) {
+        points -= coaches[coach].cost;
+        coaches[coach].purchased = true;
+        currentCoachIndex++;
+        saveGameData();
+        updateDisplay();
+    }
+}
+
+// Buy player upgrades (Upgrade button click logic)
 function buyUpgrade(upgradeNumber) {
     if (upgradeNumber === 1 && points >= upgrade1Cost) {
         points -= upgrade1Cost;
@@ -196,49 +220,6 @@ function buyUpgrade(upgradeNumber) {
         pointsPerClick += 50;
         upgrade5Purchased = true;
         localStorage.setItem("upgrade5Purchased", "true");
-        saveGameData();
-        updateDisplay();
-    }
-}
-
-// Buy coach upgrades
-function buyCoach(coachNumber) {
-    if (coachNumber === 1 && points >= coaches.philJackson.cost) {
-        points -= coaches.philJackson.cost;
-        coaches.philJackson.purchased = true;
-        localStorage.setItem("coach1Purchased", "true");
-        document.getElementById("coach2").style.display = "block";
-        saveGameData();
-        updateDisplay();
-    }
-    else if (coachNumber === 2 && points >= coaches.patRiley.cost) {
-        points -= coaches.patRiley.cost;
-        coaches.patRiley.purchased = true;
-        localStorage.setItem("coach2Purchased", "true");
-        document.getElementById("coach3").style.display = "block";
-        saveGameData();
-        updateDisplay();
-    }
-    else if (coachNumber === 3 && points >= coaches.redAuerbach.cost) {
-        points -= coaches.redAuerbach.cost;
-        coaches.redAuerbach.purchased = true;
-        localStorage.setItem("coach3Purchased", "true");
-        document.getElementById("coach4").style.display = "block";
-        saveGameData();
-        updateDisplay();
-    }
-    else if (coachNumber === 4 && points >= coaches.greggPopovich.cost) {
-        points -= coaches.greggPopovich.cost;
-        coaches.greggPopovich.purchased = true;
-        localStorage.setItem("coach4Purchased", "true");
-        document.getElementById("coach5").style.display = "block";
-        saveGameData();
-        updateDisplay();
-    }
-    else if (coachNumber === 5 && points >= coaches.docRivers.cost) {
-        points -= coaches.docRivers.cost;
-        coaches.docRivers.purchased = true;
-        localStorage.setItem("coach5Purchased", "true");
         saveGameData();
         updateDisplay();
     }
