@@ -54,174 +54,134 @@ function generateAutoPoints() {
 
 // Function to deposit points into the point bank
 function depositPoints() {
-    if (points > 0) {
-        bankBalance += points;
-        points = 0;
+    let depositAmount = parseInt(document.getElementById("deposit-amount").value);
+    if (depositAmount > 0 && depositAmount <= points) {
+        points -= depositAmount;
+        bankBalance += depositAmount;
         updateBankDisplay();
+        saveGameData();
+    } else {
+        alert("Invalid deposit amount!");
     }
 }
 
 // Function to withdraw points from the point bank
 function withdrawPoints() {
-    points += bankBalance;
-    bankBalance = 0;
-    updateBankDisplay();
-    saveGameData();
+    let withdrawAmount = parseInt(document.getElementById("withdraw-amount").value);
+    if (withdrawAmount > 0 && withdrawAmount <= bankBalance) {
+        points += withdrawAmount;
+        bankBalance -= withdrawAmount;
+        updateBankDisplay();
+        saveGameData();
+    } else {
+        alert("Invalid withdrawal amount!");
+    }
+}
+
+// Function to deposit the maximum amount possible (all points)
+function depositMax() {
+    if (points > 0) {
+        bankBalance += points;
+        points = 0;
+        updateBankDisplay();
+        saveGameData();
+    }
+}
+
+// Function to withdraw the maximum amount possible (all bank balance)
+function withdrawMax() {
+    if (bankBalance > 0) {
+        points += bankBalance;
+        bankBalance = 0;
+        updateBankDisplay();
+        saveGameData();
+    }
 }
 
 // Function to update the point bank and interest
 function updateBankDisplay() {
-    document.getElementById('bank-amount').innerText = Math.round(bankBalance); // Round up
-    document.getElementById('interest-rate').innerText = `${interestRate.toFixed(2)}%`;
-
-    // Increase interest rate based on the amount in the bank
-    interestRate = 0.5 + (bankBalance / 1000000); // Increase interest rate as bank balance grows
-    bankBalance += Math.round(bankBalance * (interestRate / 100)); // Round up the bank balance
+    document.getElementById("bank-amount").innerText = `Bank Balance: ${bankBalance}`;
+    document.getElementById("interest-rate").innerText = `Interest Rate: ${interestRate.toFixed(2)}%`;
+    interestRate += bankBalance * 0.0001; // Interest rate increases slightly based on bank balance
 }
 
-// Function to handle the prestige system
-function prestige() {
-    if (points >= prestigeCost) {
-        points = 0;
-        pointsPerClick = 1;
-        prestigeMultiplier *= 1.5;
-        prestigeCost = Math.floor(prestigeCost * 1.5); // Scaling up prestige cost
-        saveGameData();
-        updateDisplay();
-    }
-}
-
-// Function to update the display of points and multipliers
+// Function to update the display
 function updateDisplay() {
     document.getElementById("points").innerText = `Points: ${points}`;
     document.getElementById("multipliers").innerText = `Multipliers: ${prestigeMultiplier}x`;
-
-    // Show the current player and coach
-    if (currentPlayerIndex < players.length) {
-        document.getElementById("player").innerText = `${players[currentPlayerIndex].name} (Cost: ${players[currentPlayerIndex].cost})`;
-    }
-
-    if (currentCoachIndex < Object.keys(coaches).length) {
-        document.getElementById("coach").innerText = `${Object.keys(coaches)[currentCoachIndex]} (Cost: ${coaches[Object.keys(coaches)[currentCoachIndex]].cost})`;
-    }
-
-    // Update bank display
-    updateBankDisplay();
 }
 
-// Save the game data to local storage
+// Function to prestige and reset the game
+function prestige() {
+    if (points >= prestigeCost) {
+        points = 0;
+        prestigeMultiplier *= 1.5;
+        prestigeCost = Math.floor(prestigeCost * 1.5);
+        saveGameData();
+        updateDisplay();
+    }
+}
+
+// Function to buy a player
+function buyPlayer() {
+    if (currentPlayerIndex < players.length && points >= players[currentPlayerIndex].cost) {
+        points -= players[currentPlayerIndex].cost;
+        pointsPerClick += players[currentPlayerIndex].pointsPerClick;
+        currentPlayerIndex++;
+        updateDisplay();
+        saveGameData();
+    }
+}
+
+// Function to buy a coach
+function buyCoach() {
+    if (currentCoachIndex < Object.keys(coaches).length && points >= coaches[Object.keys(coaches)[currentCoachIndex]].cost) {
+        points -= coaches[Object.keys(coaches)[currentCoachIndex]].cost;
+        coaches[Object.keys(coaches)[currentCoachIndex]].purchased = true;
+        currentCoachIndex++;
+        updateDisplay();
+        saveGameData();
+    }
+}
+
+// Function to save the game data to localStorage
 function saveGameData() {
     localStorage.setItem("points", points);
     localStorage.setItem("pointsPerClick", pointsPerClick);
-    localStorage.setItem("prestigeMultiplier", prestigeMultiplier);
-
-    localStorage.setItem("upgrade1Purchased", upgrade1Purchased);
-    localStorage.setItem("upgrade2Purchased", upgrade2Purchased);
-    localStorage.setItem("upgrade3Purchased", upgrade3Purchased);
-    localStorage.setItem("upgrade4Purchased", upgrade4Purchased);
-    localStorage.setItem("upgrade5Purchased", upgrade5Purchased);
-
-    localStorage.setItem("currentPlayerIndex", currentPlayerIndex);
-    localStorage.setItem("currentCoachIndex", currentCoachIndex);
-
     localStorage.setItem("bankBalance", bankBalance);
     localStorage.setItem("interestRate", interestRate);
+    localStorage.setItem("prestigeMultiplier", prestigeMultiplier);
+    localStorage.setItem("currentPlayerIndex", currentPlayerIndex);
+    localStorage.setItem("currentCoachIndex", currentCoachIndex);
 }
 
-// Load game data from local storage
+// Function to load the game data from localStorage
 window.onload = function() {
-    if (localStorage.getItem("points")) points = parseInt(localStorage.getItem("points"));
-    if (localStorage.getItem("pointsPerClick")) pointsPerClick = parseInt(localStorage.getItem("pointsPerClick"));
-    if (localStorage.getItem("prestigeMultiplier")) prestigeMultiplier = parseFloat(localStorage.getItem("prestigeMultiplier"));
-    if (localStorage.getItem("bankBalance")) bankBalance = parseFloat(localStorage.getItem("bankBalance"));
-    if (localStorage.getItem("interestRate")) interestRate = parseFloat(localStorage.getItem("interestRate"));
-    
-    if (localStorage.getItem("currentPlayerIndex")) currentPlayerIndex = parseInt(localStorage.getItem("currentPlayerIndex"));
-    if (localStorage.getItem("currentCoachIndex")) currentCoachIndex = parseInt(localStorage.getItem("currentCoachIndex"));
+    if (localStorage.getItem("points")) {
+        points = parseInt(localStorage.getItem("points"));
+    }
+    if (localStorage.getItem("pointsPerClick")) {
+        pointsPerClick = parseInt(localStorage.getItem("pointsPerClick"));
+    }
+    if (localStorage.getItem("bankBalance")) {
+        bankBalance = parseInt(localStorage.getItem("bankBalance"));
+    }
+    if (localStorage.getItem("interestRate")) {
+        interestRate = parseFloat(localStorage.getItem("interestRate"));
+    }
+    if (localStorage.getItem("prestigeMultiplier")) {
+        prestigeMultiplier = parseFloat(localStorage.getItem("prestigeMultiplier"));
+    }
+    if (localStorage.getItem("currentPlayerIndex")) {
+        currentPlayerIndex = parseInt(localStorage.getItem("currentPlayerIndex"));
+    }
+    if (localStorage.getItem("currentCoachIndex")) {
+        currentCoachIndex = parseInt(localStorage.getItem("currentCoachIndex"));
+    }
 
-    // Load upgrades (none in this simplified version)
     updateDisplay();
-
-    // Start generating points from coaches every second
-    setInterval(generateAutoPoints, 1000);
+    updateBankDisplay();
+    setInterval(generateAutoPoints, 1000); // Start auto points generation every second
 };
 
-// Click the basketball to earn points
-function clickBasketball() {
-    points += pointsPerClick;
-    saveGameData();
-    updateDisplay();
-}
-
-// Buy player upgrades
-function buyPlayer() {
-    let player = players[currentPlayerIndex];
-    if (points >= player.cost) {
-        points -= player.cost;
-        pointsPerClick += player.pointsPerClick;
-        currentPlayerIndex++;
-        saveGameData();
-        updateDisplay();
-    }
-}
-
-// Buy coach upgrades
-function buyCoach() {
-    let coach = Object.keys(coaches)[currentCoachIndex];
-    if (points >= coaches[coach].cost) {
-        points -= coaches[coach].cost;
-        coaches[coach].purchased = true;
-        currentCoachIndex++;
-        saveGameData();
-        updateDisplay();
-    }
-}
-
-// Buy player upgrades (Upgrade button click logic)
-function buyUpgrade(upgradeNumber) {
-    if (upgradeNumber === 1 && points >= upgrade1Cost) {
-        points -= upgrade1Cost;
-        pointsPerClick += 1;
-        upgrade1Purchased = true;
-        localStorage.setItem("upgrade1Purchased", "true");
-        upgrade1Cost = Math.floor(upgrade1Cost * 1.5);
-        saveGameData();
-        updateDisplay();
-    }
-    else if (upgradeNumber === 2 && points >= upgrade2Cost) {
-        points -= upgrade2Cost;
-        pointsPerClick += 5;
-        upgrade2Purchased = true;
-        localStorage.setItem("upgrade2Purchased", "true");
-        upgrade2Cost = Math.floor(upgrade2Cost * 1.5);
-        saveGameData();
-        updateDisplay();
-    }
-    else if (upgradeNumber === 3 && points >= upgrade3Cost) {
-        points -= upgrade3Cost;
-        pointsPerClick += 10;
-        upgrade3Purchased = true;
-        localStorage.setItem("upgrade3Purchased", "true");
-        upgrade3Cost = Math.floor(upgrade3Cost * 1.5);
-        saveGameData();
-        updateDisplay();
-    }
-    else if (upgradeNumber === 4 && points >= upgrade4Cost) {
-        points -= upgrade4Cost;
-        pointsPerClick += 20;
-        upgrade4Purchased = true;
-        localStorage.setItem("upgrade4Purchased", "true");
-        upgrade4Cost = Math.floor(upgrade4Cost * 1.5);
-        saveGameData();
-        updateDisplay();
-    }
-    else if (upgradeNumber === 5 && points >= upgrade5Cost) {
-        points -= upgrade5Cost;
-        pointsPerClick += 50;
-        upgrade5Purchased = true;
-        localStorage.setItem("upgrade5Purchased", "true");
-        saveGameData();
-        updateDisplay();
-    }
-}
 
