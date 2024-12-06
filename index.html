@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Basketball Clicker Game</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Link to the Google Font 'Fredoka One' for a cartoonish style -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -13,17 +12,44 @@
         <h1>Basketball Clicker</h1>
         <div id="points">Points: 0</div>
         <div id="basketball" onclick="clickBasketball()">🏀</div>
+
+        <!-- Two-column layout for Players and Coaches -->
         <div id="upgrades">
-            <!-- Famous basketball players as upgrades -->
-            <button id="upgrade1" onclick="buyUpgrade(1)">Michael Jordan (Cost: 10)</button>
-            <button id="upgrade2" onclick="buyUpgrade(2)" style="display:none;">LeBron James (Cost: 50)</button>
-            <button id="upgrade3" onclick="buyUpgrade(3)" style="display:none;">Kobe Bryant (Cost: 200)</button>
-            <button id="upgrade4" onclick="buyUpgrade(4)" style="display:none;">Stephen Curry (Cost: 1000)</button>
-            <button id="prestige" onclick="prestige()">Prestige (Cost: 100000)</button>
+            <div class="column">
+                <h2>Players</h2>
+                <button id="upgrade1" onclick="buyUpgrade(1)">Michael Jordan (Cost: 10, +1 per click)</button>
+                <button id="upgrade2" onclick="buyUpgrade(2)" style="display:none;">LeBron James (Cost: 50, +5 per click)</button>
+                <button id="upgrade3" onclick="buyUpgrade(3)" style="display:none;">Kobe Bryant (Cost: 200, +10 per click)</button>
+                <button id="upgrade4" onclick="buyUpgrade(4)" style="display:none;">Stephen Curry (Cost: 1000, +20 per click)</button>
+                <button id="upgrade5" onclick="buyUpgrade(5)" style="display:none;">Bill Russell (Cost: 5000, +50 per click)</button>
+            </div>
+
+            <div class="column">
+                <h2>Coaches</h2>
+                <button id="coach1" onclick="buyCoach(1)" style="display:none;">Phil Jackson (Cost: 100, +1 per sec)</button>
+                <button id="coach2" onclick="buyCoach(2)" style="display:none;">Pat Riley (Cost: 500, +5 per sec)</button>
+                <button id="coach3" onclick="buyCoach(3)" style="display:none;">Red Auerbach (Cost: 2500, +20 per sec)</button>
+                <button id="coach4" onclick="buyCoach(4)" style="display:none;">Gregg Popovich (Cost: 10000, +50 per sec)</button>
+                <button id="coach5" onclick="buyCoach(5)" style="display:none;">Doc Rivers (Cost: 25000, +100 per sec)</button>
+            </div>
         </div>
+
+        <!-- Point Bank Section -->
+        <div id="point-bank">
+            <h2>Point Bank</h2>
+            <div>Deposited Points: <span id="bank-amount">0</span></div>
+            <div>Interest Rate: <span id="interest-rate">0.5%</span></div>
+            <button onclick="depositPoints()">Deposit Points</button>
+            <button onclick="withdrawPoints()">Withdraw Points</button>
+        </div>
+
         <div id="multipliers">Multipliers: 1x</div>
+        <div id="prestige">
+            <button onclick="prestige()">Prestige (Cost: 100000)</button>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
 </html>
+
 
