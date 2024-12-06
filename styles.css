@@ -1,59 +1,142 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 body {
+    font-family: 'Comic Sans MS', Arial, sans-serif; /* Comic Sans font */
     background-color: black;
     color: white;
-    font-family: 'Fredoka One', sans-serif;
     text-align: center;
     padding: 20px;
 }
 
+h1 {
+    font-size: 2em;
+    margin-bottom: 10px;
+}
+
+h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+/* Container for the game content */
 #game {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-#basketball {
-    font-size: 100px;
-    cursor: pointer;
-    margin: 20px;
-}
-
-button {
-    background-color: #333;
-    color: white;
-    border: none;
-    padding: 10px;
-    margin: 5px;
-    cursor: pointer;
-    font-size: 18px;
-    width: 250px;
-}
-
-button:hover {
-    background-color: #444;
-}
-
-#upgrades {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
-    width: 80%;
-}
-
-.column {
-    width: 40%;
-    text-align: left;
-}
-
-#point-bank {
-    margin-top: 30px;
+    max-width: 800px;
+    margin: 0 auto;
     padding: 20px;
     background-color: #333;
     border-radius: 10px;
-    width: 60%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-#points, #multipliers {
-    font-size: 20px;
+/* Main points display */
+#points {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+/* Basketball button style */
+#basketball {
+    font-size: 3em;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+/* Sections for upgrades, players, coaches, and bank */
+#players, #coaches, #bank {
+    margin-bottom: 20px;
+}
+
+#players div, #coaches div {
+    margin-bottom: 10px;
+}
+
+/* Input fields for bank transactions */
+input[type="number"] {
+    font-size: 1em;
+    padding: 5px;
+    margin: 5px;
+    width: 120px;
+    text-align: center;
+}
+
+/* Buttons */
+button {
+    font-size: 1em;
+    padding: 10px 20px;
+    margin: 5px;
+    background-color: #ff8c00;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+button:hover {
+    background-color: #e67e00;
+}
+
+/* Bank Section */
+#bank {
+    font-size: 1.2em;
+}
+
+#bank-amount, #interest-rate {
+    font-size: 1.3em;
     margin: 10px 0;
 }
+
+/* Multipliers Section */
+#multipliers {
+    font-size: 1.2em;
+    margin-top: 20px;
+}
+
+/* Prestige Section */
+#prestige {
+    margin-top: 20px;
+}
+
+/* Responsive Design for Small Screens (Kindle / Mobile) */
+@media (max-width: 600px) {
+    #game {
+        width: 100%;
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    h2 {
+        font-size: 1.3em;
+    }
+
+    #basketball {
+        font-size: 2.5em;
+    }
+
+    button {
+        font-size: 0.9em;
+        padding: 8px 15px;
+    }
+
+    #points, #multipliers, #bank-amount, #interest-rate {
+        font-size: 1.2em;
+    }
+
+    #players, #coaches {
+        text-align: left;
+        padding-left: 20px;
+    }
+
+    #bank {
+        text-align: left;
+        padding-left: 20px;
+    }
+}
+
