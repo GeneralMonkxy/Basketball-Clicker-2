@@ -6,7 +6,7 @@
 }
 
 body {
-    font-family: 'Comic Sans MS', Arial, sans-serif; /* Comic Sans font */
+    font-family: 'Comic Sans MS', 'Comic Sans', Arial, sans-serif; /* Comic Sans font */
     background-color: black;
     color: white;
     text-align: center;
@@ -139,4 +139,5 @@ button:hover {
         padding-left: 20px;
     }
 }
+
 
