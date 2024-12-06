@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Basketball Clicker Game</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
 </head>
 <body>
     <div id="game">
@@ -12,12 +13,15 @@
         <div id="points">Points: 0</div>
         <div id="basketball" onclick="clickBasketball()">🏀</div>
         <div id="upgrades">
-            <button id="upgrade1" onclick="buyUpgrade(1)">Upgrade 1 (Cost: 10)</button>
-            <button id="upgrade2" onclick="buyUpgrade(2)">Upgrade 2 (Cost: 50)</button>
-            <button id="prestige" onclick="prestige()">Prestige (Cost: 1000)</button>
+            <button id="upgrade1" onclick="buyUpgrade(1)">Michael Jordan (Cost: 10)</button>
+            <button id="upgrade2" onclick="buyUpgrade(2)" style="display:none;">LeBron James (Cost: 50)</button>
+            <button id="upgrade3" onclick="buyUpgrade(3)" style="display:none;">Kobe Bryant (Cost: 200)</button>
+            <button id="upgrade4" onclick="buyUpgrade(4)" style="display:none;">Stephen Curry (Cost: 1000)</button>
+            <button id="prestige" onclick="prestige()">Prestige (Cost: 100000)</button>
         </div>
         <div id="multipliers">Multipliers: 1x</div>
     </div>
     <script src="script.js"></script>
 </body>
 </html>
+
