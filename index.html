@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Basketball Clicker Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Sans+MS&display=swap" rel="stylesheet"> <!-- Comic Sans Font Import -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -11,44 +12,31 @@
         <h1>Basketball Clicker</h1>
         <div id="points">Points: 0</div>
         <div id="basketball" onclick="clickBasketball()">🏀</div>
-
-        <div id="players">
-            <h2>Players</h2>
-            <div id="player"></div>
-            <button onclick="buyPlayer()">Buy Player</button>
+        <div id="upgrades">
+            <button id="upgrade1" onclick="buyUpgrade(1)">Upgrade 1 (Cost: 10)</button>
+            <button id="upgrade2" onclick="buyUpgrade(2)">Upgrade 2 (Cost: 50)</button>
+            <button id="upgrade3" onclick="buyUpgrade(3)">Upgrade 3 (Cost: 200)</button>
+            <button id="prestige" onclick="prestige()">Prestige (Cost: 1000)</button>
         </div>
-
-        <div id="coaches">
-            <h2>Coaches</h2>
-            <div id="coach"></div>
-            <button onclick="buyCoach()">Buy Coach</button>
-        </div>
-
+        <div id="multipliers">Multipliers: 1x</div>
+        <!-- Players Section -->
+        <div id="players"></div>
+        <!-- Coaches Section -->
+        <div id="coaches"></div>
+        <!-- Bank Section -->
         <div id="bank">
-            <h2>Point Bank</h2>
-            <div>
-                <input type="number" id="deposit-amount" placeholder="Amount to deposit" min="0" />
-                <button onclick="depositPoints()">Deposit</button>
-            </div>
-            <div>
-                <input type="number" id="withdraw-amount" placeholder="Amount to withdraw" min="0" />
-                <button onclick="withdrawPoints()">Withdraw</button>
-            </div>
-            <div>
-                <button onclick="depositMax()">Max Deposit</button>
-                <button onclick="withdrawMax()">Max Withdraw</button>
-            </div>
             <div id="bank-amount">Bank Balance: 0</div>
             <div id="interest-rate">Interest Rate: 0.50%</div>
-        </div>
-
-        <div id="multipliers">Multipliers: 1x</div>
-        <div id="prestige">
-            <button onclick="prestige()">Prestige (Cost: 100,000)</button>
+            <input type="number" id="deposit-amount" placeholder="Amount to deposit" />
+            <button onclick="depositPoints()">Deposit</button>
+            <button onclick="withdrawPoints()">Withdraw</button>
+            <button onclick="maxDeposit()">Max Deposit</button>
+            <button onclick="maxWithdraw()">Max Withdraw</button>
         </div>
     </div>
     <script src="script.js"></script>
 </body>
 </html>
+
 
 
