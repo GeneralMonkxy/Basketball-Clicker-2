@@ -26,10 +26,20 @@
 
         <div id="bank">
             <h2>Point Bank</h2>
-            <div id="bank-amount">0</div>
-            <div id="interest-rate">0.50%</div>
-            <button onclick="depositPoints()">Deposit Points</button>
-            <button onclick="withdrawPoints()">Withdraw Points</button>
+            <div>
+                <input type="number" id="deposit-amount" placeholder="Amount to deposit" min="0" />
+                <button onclick="depositPoints()">Deposit</button>
+            </div>
+            <div>
+                <input type="number" id="withdraw-amount" placeholder="Amount to withdraw" min="0" />
+                <button onclick="withdrawPoints()">Withdraw</button>
+            </div>
+            <div>
+                <button onclick="depositMax()">Max Deposit</button>
+                <button onclick="withdrawMax()">Max Withdraw</button>
+            </div>
+            <div id="bank-amount">Bank Balance: 0</div>
+            <div id="interest-rate">Interest Rate: 0.50%</div>
         </div>
 
         <div id="multipliers">Multipliers: 1x</div>
@@ -37,10 +47,6 @@
             <button onclick="prestige()">Prestige (Cost: 100,000)</button>
         </div>
     </div>
-    <script src="script.js"></script>
-</body>
-</html>
-
     <script src="script.js"></script>
 </body>
 </html>
